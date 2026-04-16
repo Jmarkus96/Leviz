@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Leviz — Ebook interactivo de inglés</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+  <meta name="description" content="Aprende inglés con un ebook interactivo mobile-first: lecturas, quizzes, huecos y flashcards.">
+  <meta name="theme-color" content="#a24b2a" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1e1a16" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='78'%3E📖%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<!-- SVG sprite inline (loaded once) -->
+<div aria-hidden="true" style="width:0;height:0;overflow:hidden;position:absolute"></div>
+
+<main>
+
+  <!-- ░░░ Cover ░░░ -->
+  <section id="view-cover" class="view active" aria-label="Portada">
+    <div class="cover-art">Learn<br>English</div>
+    <h1 class="cover-title">Learn English</h1>
+    <p class="cover-sub">Un ebook interactivo para aprender inglés desde cero.</p>
+    <div class="cover-actions">
+      <button id="cover-start" class="btn primary">
+        <svg class="icon"><use href="assets/icons.svg#i-play"/></svg>
+        Empezar
+      </button>
+      <button id="cover-continue" class="btn ghost" hidden></button>
+    </div>
+  </section>
+
+  <!-- ░░░ TOC ░░░ -->
+  <section id="view-toc" class="view" aria-label="Índice">
+    <header class="app-header">
+      <div class="title">Índice</div>
+      <button id="btn-theme" class="icon-btn" aria-label="Cambiar tema">
+        <svg class="icon"><use href="assets/icons.svg#i-sun"/></svg>
+      </button>
+    </header>
+    <div style="padding: 4px 16px 16px;">
+      <p class="muted">Elige un capítulo para empezar a leer.</p>
+      <div id="toc-list" class="toc-list"></div>
+    </div>
+  </section>
+
+  <!-- ░░░ Reader ░░░ -->
+  <section id="view-reader" class="view" aria-label="Lector">
+    <header class="reader-top">
+      <button id="reader-back" class="icon-btn" aria-label="Volver al índice">
+        <svg class="icon"><use href="assets/icons.svg#i-toc"/></svg>
+      </button>
+      <div class="reader-title-wrap">
+        <div id="reader-title" class="reader-title">—</div>
+        <div id="reader-counter" class="reader-counter">—</div>
+      </div>
+      <span></span>
+    </header>
+    <div class="top-progress"><div id="reader-progress" style="width:0%"></div></div>
+    <div class="reader-page">
+      <div id="reader-body" class="reader-body"></div>
+    </div>
+    <div class="reader-foot">
+      <button id="reader-prev" class="btn ghost">
+        <svg class="icon"><use href="assets/icons.svg#i-arrow-left"/></svg>
+        Anterior
+      </button>
+      <button id="reader-next" class="btn primary">
+        Siguiente
+        <svg class="icon"><use href="assets/icons.svg#i-arrow-right"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ░░░ Vocab ░░░ -->
+  <section id="view-vocab" class="view" aria-label="Vocabulario">
+    <header class="app-header"><div class="title">Vocabulario</div></header>
+    <div style="padding: 4px 16px 16px;">
+      <p class="muted">Todas las palabras agrupadas por capítulo, con tu nivel de dominio.</p>
+      <div id="vocab-list"></div>
+    </div>
+  </section>
+
+  <!-- ░░░ Progress ░░░ -->
+  <section id="view-progress" class="view" aria-label="Progreso">
+    <header class="app-header">
+      <div class="title">Tu progreso</div>
+      <button class="icon-btn" aria-label="Ajustes" onclick="location.hash='/settings'">
+        <svg class="icon"><use href="assets/icons.svg#i-refresh"/></svg>
+      </button>
+    </header>
+    <div style="padding: 4px 16px 16px;">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <h3>Avance general</h3>
+          <div id="stat-overall" class="stat-value">—</div>
+          <div id="stat-overall-sub" class="stat-sub"></div>
+        </div>
+        <div class="stat-card">
+          <h3>Aciertos</h3>
+          <div id="stat-exercises" class="stat-value">—</div>
+          <div id="stat-exercises-sub" class="stat-sub"></div>
+        </div>
+        <div class="stat-card">
+          <h3>Vocabulario</h3>
+          <div id="stat-vocab" class="stat-value">—</div>
+          <div id="stat-vocab-sub" class="stat-sub"></div>
+        </div>
+        <div class="stat-card">
+          <h3>Racha</h3>
+          <div id="stat-streak" class="stat-value">—</div>
+          <div id="stat-streak-sub" class="stat-sub"></div>
+        </div>
+      </div>
+      <h2 style="margin-top:22px;font-family:var(--font-body);font-size:1.1rem;">Por capítulo</h2>
+      <div id="progress-chapters" class="progress-chapters"></div>
+    </div>
+  </section>
+
+  <!-- ░░░ Settings ░░░ -->
+  <section id="view-settings" class="view" aria-label="Ajustes">
+    <header class="app-header"><div class="title">Ajustes</div></header>
+    <div style="padding: 4px 16px 16px;">
+      <div class="settings-card">
+        <h3 style="margin:0 0 4px;">Tema</h3>
+        <p class="muted" style="margin:0;">Elige cómo se ve la aplicación.</p>
+        <div class="theme-options">
+          <label><input type="radio" name="theme" value="system"> Automático (sistema)</label>
+          <label><input type="radio" name="theme" value="light"> Claro</label>
+          <label><input type="radio" name="theme" value="dark"> Oscuro</label>
+        </div>
+      </div>
+      <div class="settings-card">
+        <h3 style="margin:0 0 4px;">Datos</h3>
+        <p class="muted" style="margin:0 0 10px;">Tu progreso se guarda solo en este dispositivo.</p>
+        <button id="settings-reset" class="btn ghost">Borrar progreso</button>
+      </div>
+      <p class="muted" style="text-align:center;margin-top:20px;font-size:.8rem;">
+        Leviz — Demo de ebook interactivo. Contenido con fines ilustrativos.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ░░░ Bottom nav ░░░ -->
+<nav class="bottom-nav" aria-label="Navegación principal">
+  <button data-view="toc" aria-label="Índice">
+    <svg class="icon"><use href="assets/icons.svg#i-toc"/></svg>
+    <span>Índice</span>
+  </button>
+  <button data-view="reader" aria-label="Lector">
+    <svg class="icon"><use href="assets/icons.svg#i-book"/></svg>
+    <span>Lector</span>
+  </button>
+  <button data-view="vocab" aria-label="Vocabulario">
+    <svg class="icon"><use href="assets/icons.svg#i-cards"/></svg>
+    <span>Vocab</span>
+  </button>
+  <button data-view="progress" aria-label="Progreso">
+    <svg class="icon"><use href="assets/icons.svg#i-chart"/></svg>
+    <span>Progreso</span>
+  </button>
+</nav>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

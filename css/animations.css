@@ -1,0 +1,78 @@
+/* Transiciones entre vistas y páginas del lector */
+
+.view { opacity: 0; transform: translateY(6px); }
+.view.active {
+  opacity: 1; transform: none;
+  animation: view-in .25s ease-out both;
+}
+@keyframes view-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Entrada de páginas del lector (se dispara al cambiar de página) */
+.reader-body {
+  animation: page-in .28s cubic-bezier(.25,.8,.3,1) both;
+}
+@keyframes page-in {
+  from { opacity: 0; transform: translateX(24px); filter: blur(2px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+
+/* Entrada escalonada de tarjetas de ejercicio */
+.ex-card {
+  animation: card-in .35s ease-out both;
+}
+.ex-card:nth-child(2) { animation-delay: .05s; }
+.ex-card:nth-child(3) { animation-delay: .10s; }
+.ex-card:nth-child(4) { animation-delay: .15s; }
+.ex-card:nth-child(5) { animation-delay: .20s; }
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Botón primario en el summary con un pequeño pulso */
+.ex-summary .btn.primary {
+  animation: pulse .9s ease-in-out 1;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+
+/* Flip feedback sutil al marcar respuesta correcta */
+.option.correct, .option.wrong {
+  animation: tap-feedback .25s ease both;
+}
+@keyframes tap-feedback {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(.97); }
+  100% { transform: scale(1); }
+}
+
+/* Barra de progreso superior con leve shimmer al cambiar de página */
+.top-progress > div {
+  background-size: 200% 100%;
+  animation: bar-shimmer 1.4s linear infinite;
+}
+@keyframes bar-shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* Portada: ligero balanceo del libro */
+.cover-art {
+  animation: book-in .6s ease-out both;
+}
+@keyframes book-in {
+  from { opacity: 0; transform: perspective(800px) rotateY(-20deg) translateY(20px); }
+  to   { opacity: 1; transform: perspective(800px) rotateY(-8deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view, .reader-body, .ex-card, .cover-art, .option.correct, .option.wrong, .ex-summary .btn.primary {
+    animation: none !important;
+  }
+  .top-progress > div { animation: none !important; }
+}
